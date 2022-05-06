@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Convert JSON Data to HTML Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <style>
+    th,
+    td,
+    p,
+    input,
+    h3 {
+        font: 15px 'Segoe UI';
+    }
+
+    table,
+    th,
+    td {
+        border: solid 1px #ddd;
+        border-collapse: collapse;
+        padding: 2px 3px;
+        text-align: center;
+    }
+
+    th {
+        font-weight: bold;
+    }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+</head>
+
+<body>
+
+    <p id='showData'></p>
+</body>
+
+<script>
+    window.alert = function() {};
+function tableFromJson() {
+
+    var dataJson = "############################"
+    var col = [];
+    for (var i = 0; i < dataJson.length; i++) {
+        for (var key in dataJson[i]) {
+            if (col.indexOf(key) === -1) {
+                col.push(key);
+            }
+        }
+    }
+    col.reverse();
+
+    var pointer0 = col[0];
+    var pointer1 = col[1];
+    col.splice(0, 2);
+    col.reverse();
+    var colll0 = col;
+    col = [];
+    col.push(pointer1);
+    col.push(pointer0);
+    col.push.apply(col, colll0);
+    console.log(col);
+    var table = document.createElement("table");
+    var thead = document.createElement("thead");
+    table.appendChild(thead);
+    table.setAttribute("id", "table");
+    table.setAttribute("class", "display");
+
+    var tr = table.insertRow(-1);
+    var trr = document.createElement("tr");
+    for (var i = 0; i < col.length; i++) {
+        var th = document.createElement("th");
+        th.innerHTML = col[i];
+        trr.appendChild(th);
+
+    }
+    thead.appendChild(trr);
+    // add json data to the table as rows.
+    for (var i = 0; i < dataJson.length; i++) {
+
+        tr = table.insertRow(-1);
+
+        for (var j = 0; j < col.length; j++) {
+            var tabCell = tr.insertCell(-1);
+            if (!isNaN(parseFloat(dataJson[i][col[j]]))) {
+                tabCell.innerHTML = parseFloat(dataJson[i][col[j]]).toFixed(3);
+            } else {
+                tabCell.innerHTML = dataJson[i][col[j]];
+            }
+
+        }
+    }
+    var divShowData = document.getElementById('showData');
+    divShowData.innerHTML = "";
+    divShowData.appendChild(table);
+    $('#table').find('tbody tr:first').remove();
+}
+tableFromJson();
+$(document).ready(function() {
+    var tableComp = $(document.getElementById('table'));
+    tableComp.DataTable({
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json"
+        }
+    });
+});
+</script>
+
+</html>
